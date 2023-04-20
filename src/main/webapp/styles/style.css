@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #222;
+    color: #fff;
+    font-family: sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+button[type="submit"] {
+    border: none;
+    padding: 10px;
+    font-size: 18px;
+    background-color: #333;
+    color: #fff;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="time"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+input {
+    width: 30%;
+}
+
+button[type="submit"] {
+    cursor: pointer;
+    background-color: #4CAF50;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #333;
+}
+
+li span {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+li span.date {
+    font-size: 14px;
+    color: #888;
+}
+
+li button {
+    border: none;
+    padding: 5px;
+    font-size: 12px;
+    background-color: #ff3b3b;
+    color: #fff;
+    margin-left: 5px;
+    cursor: pointer;
+}
+  
