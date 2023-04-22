@@ -1,7 +1,8 @@
 package com.wiecny.todoapp.controllers;
 
+import com.wiecny.todoapp.dto.TodoDTO;
+import com.wiecny.todoapp.model.MyEntity;
 import com.wiecny.todoapp.model.Todo;
-import com.wiecny.todoapp.model.TodoDTO;
 import com.wiecny.todoapp.service.TodoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +30,18 @@ public class TodoController {
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.GET)
-    public ResponseEntity remove(@RequestParam int id) {
-        todoService.deleteById(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TodoDTO> remove(@RequestParam int id) {
+        TodoDTO dto = todoService.deleteById(id);
+        return ResponseEntity.ok(dto);
     }
 
     @RequestMapping(value = "/getTodayTodos", method = RequestMethod.GET)
     public ResponseEntity<List<Todo>> getTodayTodos() {
         return ResponseEntity.ok(todoService.getTodayTodos());
+    }
+
+    @RequestMapping(value = "/getClone", method = RequestMethod.GET)
+    public ResponseEntity<MyEntity> getCloneById(@RequestParam int id) {
+        return ResponseEntity.ok(todoService.getCloneById(id));
     }
 }

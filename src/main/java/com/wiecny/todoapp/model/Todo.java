@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Builder
-public class Todo {
+public class Todo implements MyEntity, Prototype {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,4 +35,16 @@ public class Todo {
     @Column
     @NotNull
     private boolean done;
+
+    @Override
+    public Todo clone() {
+        return Todo.builder()
+                .description(getDescription())
+                .priority(getPriority())
+                .executionDate(getExecutionDate())
+                .done(isDone())
+                .build();
+    }
+
+    //    private boolean warning;
 }
