@@ -4,18 +4,17 @@ import com.wiecny.todoapp.dto.TodoDTO;
 import com.wiecny.todoapp.model.MyEntity;
 import com.wiecny.todoapp.model.Prototype;
 import com.wiecny.todoapp.model.Todo;
-import com.wiecny.todoapp.repository.TodoRepository;
+import com.wiecny.todoapp.repository.cache.TodoCache;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class TodoService {
 
-    private TodoRepository todoRepository;
+    private TodoCache todoCacheImpl;
 
     public void save(TodoDTO dto) {
         Todo todo = Todo.builder()
@@ -25,31 +24,29 @@ public class TodoService {
                 .done(false)
                 .build();
 
-        todoRepository.save(todo);
+        todoCacheImpl.add(todo);
     }
 
     public void markDone(int id) {
         Todo todo = getById(id);
         todo.setDone(true);
-        todoRepository.save(todo);
+        todoCacheImpl.add(todo);
     }
 
     public TodoDTO deleteById(int id) {
         Todo todo = getById(id);
-        todoRepository.deleteById(id);
+        todoCacheImpl.removeById(id);
         return convertModelToDTO(todo);
     }
 
     public List<Todo> getTodayTodos() {
-        return todoRepository.getTodayTodos();
+        return todoCacheImpl.getTodayTodos();
     }
 
     public MyEntity getCloneById(int id) {
         Prototype prototype = getById(id);
-        MyEntity entity = prototype.clone();
-        return entity;
+        return prototype.clone();
     }
-
 
     private TodoDTO convertModelToDTO(Todo todo) {
         return TodoDTO.builder()
@@ -58,11 +55,6 @@ public class TodoService {
     }
 
     private Todo getById(Integer id) {
-        Optional<Todo> optionalTodo = todoRepository.findById(id);
-        if (optionalTodo.isPresent()) {
-            return optionalTodo.get();
-        } else {
-            throw new IllegalArgumentException("TODO not found in db");
-        }
+        return (Todo) todoCacheImpl.getById(id);
     }
 }
