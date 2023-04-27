@@ -1,5 +1,7 @@
 package com.wiecny.todoapp.model;
 
+import com.wiecny.todoapp.component.Observable;
+import com.wiecny.todoapp.component.Observer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,13 +12,15 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
 @Builder
-public class Todo implements MyEntity, Prototype {
+public class Todo implements MyEntity, Prototype, Observable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,6 +39,12 @@ public class Todo implements MyEntity, Prototype {
     @Column
     @NotNull
     private boolean done;
+    @Column
+    private boolean warning = false;
+
+    @Transient
+    @Builder.Default
+    private List<Observer> observers = new ArrayList<>();
 
     @Override
     public Todo clone() {
@@ -46,5 +56,25 @@ public class Todo implements MyEntity, Prototype {
                 .build();
     }
 
-    //    private boolean warning;
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void removeAllObservers() {
+        observers = new ArrayList<>();
+    }
+
+    @Override
+    public void notifyObservers(LocalDateTime time) {
+        for (Observer observer : observers) {
+            observer.update(time);
+        }
+    }
 }
